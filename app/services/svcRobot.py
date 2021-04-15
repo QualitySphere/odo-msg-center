@@ -52,7 +52,7 @@ def msg_content(tmpl, body):
         'title': _title,
         'content': _content,
     }
-    logging.warning(_msg)
+    # logging.warning(_msg)
     return _msg
 
 

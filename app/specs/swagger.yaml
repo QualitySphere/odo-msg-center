@@ -103,7 +103,33 @@ paths:
         200:
           description: 发送成功
 
-#  /pm/jira/comment:
+  /pm/jira/comment:
+    post:
+      summary: JIRA 添加评论
+      operationId: api.apiJira.add_comment
+      tags:
+        - "pm"
+      parameters:
+        - name: tmpl
+          in: query
+          required: true
+          schema:
+            type: string
+            example: jira-comment
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ODO-61
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: 发送成功
 #  /pm/jira/transition:
 #  /ci/jenkins/build:
 #  /ci/jenkins/buildWithParam:
