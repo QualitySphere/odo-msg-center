@@ -1,0 +1,109 @@
+openapi: "3.0.0"
+
+info:
+  title: "OpenDevOps MSG Center"
+  version: "1.0"
+
+servers:
+  - url: http://0.0.0.0/oapi
+
+tags:
+  - name: "msg"
+    description: "消息: 企业微信、钉钉、飞书"
+  - name: "ci"
+    description: "持续集成: Jenkins"
+  - name: "pm"
+    description: "项目管理: Jira"
+
+paths:
+  /healthy:
+    get:
+      summary: 健康检查
+      operationId: api.apiHealthy.healthy
+      responses:
+        200:
+          description: Healthy
+
+  /blackhole:
+    post:
+      summary: 接收 POST 请求并在后台打印日志，用作调试
+      operationId: api.apiHealthy.black_hole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        204:
+          description: Black Hole
+
+  /robot/wwx:
+    post:
+      summary: 企业微信机器人 Work WeiXin Robot
+      operationId: api.apiRobot.wwx
+      tags:
+        - "msg"
+      parameters:
+        - name: tmpl
+          in: query
+          required: true
+          schema:
+            type: string
+            example: wwx-new-issue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: 发送成功
+
+  /robot/fs:
+    post:
+      summary: 飞书机器人 FeiShu Robot
+      operationId: api.apiRobot.fs
+      tags:
+        - "msg"
+      parameters:
+        - name: tmpl
+          in: query
+          required: true
+          schema:
+            type: string
+            example: fs-new-issue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: 发送成功
+
+  /robot/dt:
+    post:
+      summary: 钉钉机器人 DingTalk Robot
+      operationId: api.apiRobot.dt
+      tags:
+        - "msg"
+      parameters:
+        - name: tmpl
+          in: query
+          required: true
+          schema:
+            type: string
+            example: dt-new-issue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: 发送成功
+
+#  /pm/jira/comment:
+#  /pm/jira/transition:
+#  /ci/jenkins/build:
+#  /ci/jenkins/buildWithParam:

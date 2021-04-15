@@ -9,7 +9,7 @@ import logging
 
 def wwx(tmpl, body):
     """
-    POST /robot/wwx
+    POST /oapi/robot/wwx
     :param tmpl:
     :param body:
     :return:
@@ -26,7 +26,7 @@ def wwx(tmpl, body):
 
 def fs(tmpl, body):
     """
-    POST /robot/fs
+    POST /oapi/robot/fs
     :param tmpl:
     :param body:
     :return:
@@ -43,7 +43,7 @@ def fs(tmpl, body):
 
 def dt(tmpl, body):
     """
-    POST /robot/dt
+    POST /oapi/robot/dt
     :param tmpl:
     :param body:
     :return:

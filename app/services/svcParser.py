@@ -18,17 +18,14 @@ class OdoParse(object):
 
     def parse_sender(self):
         if 'self' in self.webhook_body.keys() and \
+                'id' in self.webhook_body.keys() and \
                 'key' in self.webhook_body.keys() and \
                 'fields' in self.webhook_body.keys():
             self.webhook_sender = 'a4j'
             logging.info('Sender is Automation for Jira')
             return True
         if 'timestamp' in self.webhook_body.keys() and \
-                'webhookEvent' in self.webhook_body.keys() and \
-                'issue_event_type_name' in self.webhook_body.keys() and \
-                'user' in self.webhook_body.keys() and \
-                'issue' in self.webhook_body.keys() and \
-                'comment' in self.webhook_body.keys():
+                'webhookEvent' in self.webhook_body.keys():
             self.webhook_sender = 'jira'
             logging.info('Sender is Jira Webhook')
             return True
@@ -41,28 +38,38 @@ class OdoParse(object):
             return True
 
     def parse_jira_webhook(self):
-        self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '')
-        self.webhook_title = '%s %s' % (
-            self.webhook_body['issue']['key'],
-            self.webhook_body['issue']['fields']['summary']
-        )
+        self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
+        self.webhook_title = 'Attention! Jira tell you'
         self.webhook_content = self.webhook_body
         return True
 
     def parse_jira_a4j_webhook(self):
         if self.webhook_body['changelog']['total'] == 0:
-            self.webhook_event = 'create'
+            self.webhook_event = 'Create'
         else:
-            self.webhook_event = 'update'
-        self.webhook_title = '%s %s' % (self.webhook_body.get('key'), self.webhook_body.get('fields').get('summary'))
+            self.webhook_event = 'Update'
+        self.webhook_title = 'Attention! Jira tell you'
         self.webhook_content = self.webhook_body
         return True
 
     def parse_gitlab_webhook(self):
-        pass
+        self.webhook_content = self.webhook_body
+        return True
 
     def parse_harbor_webhook(self):
-        pass
+        self.webhook_event = self.webhook_body['type'].replace('_', ' ').capitalize()
+        self.webhook_title = 'GREAT! Harbor tell you'
+        self.webhook_content = self.webhook_body
+        return True
+
+    def parse_custom_webhook(self):
+        if self.webhook_body.get('event'):
+            self.webhook_event = self.webhook_body.get('event')
+        if not self.webhook_body.get('sender'):
+            self.webhook_body['sender'] = 'MSG Center'
+        self.webhook_title = '%s tell you' % self.webhook_body['sender']
+        self.webhook_content = self.webhook_body
+        return True
 
     def parse_webhook(self):
         if self.webhook_sender == "a4j":
@@ -73,6 +80,8 @@ class OdoParse(object):
             self.parse_harbor_webhook()
         elif self.webhook_sender == "gitlab":
             self.parse_gitlab_webhook()
+        else:
+            self.parse_custom_webhook()
         return {
             "sender": self.webhook_sender,
             "event": self.webhook_event,

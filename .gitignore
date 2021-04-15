@@ -3,3 +3,4 @@ debug.*
 local_build.sh
 docker-compose-debug.yml
 __pycache__/
+template/

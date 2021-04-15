@@ -3,11 +3,17 @@ services:
   odo-msg:
     container_name: odo-msg
     image: bxwill/odo-msg
+    restart: always
+    networks:
+      - odo
     ports:
-    - 80:80
+      - 80:80
     volumes:
-    - template:/workspace/template
+      - ./template:/workspace/template
     environment:
+      JIRA_URL: ''
+      JIRA_USER: ''
+      JIRA_PASS: ''
       JENKINS_URL: ''
       JENKINS_USER: ''
       JENKINS_TOKEN: ''
@@ -16,3 +22,9 @@ services:
       DT_SECRET: ''
       FS_TOKEN: ''
       FS_SECRET: ''
+networks:
+  odo:
+    driver: bridge
+#    ipam:
+#      config:
+#        - subnet: 168.10.9.0/24

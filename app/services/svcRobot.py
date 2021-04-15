@@ -106,7 +106,7 @@ def fs(tmpl, body):
             "post": {
                 "zh_cn": {
                     "title": _content.get('title'),
-                    "content": [_content.get('content')]
+                    "content": _content.get('content')
                 }
             }
         }

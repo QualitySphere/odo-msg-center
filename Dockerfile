@@ -2,7 +2,7 @@ FROM bxwill/python:3.8-flask
 LABEL maintianer=v.stone@163.com
 WORKDIR /workspace
 COPY app app
-COPY template template
+COPY tmpl tmpl
 COPY requirements.txt requirements.txt
 COPY launch.sh launch.sh
 RUN pip install -r requirements.txt \
