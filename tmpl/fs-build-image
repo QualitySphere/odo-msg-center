@@ -1,0 +1,2 @@
+- tag: text
+  text: "{{event_data.resources[0].resource_url}} 构建成功"

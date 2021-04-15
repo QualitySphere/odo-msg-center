@@ -17,20 +17,28 @@ class OdoParse(object):
         self.webhook_content = dict()
 
     def parse_sender(self):
-        try:
-            if '/rest/api/2/issue/' in self.webhook_body.get('self'):
-                self.webhook_sender = 'a4j'
-                logging.info('Sender is Automation for JIRA')
-                return True
-        except TypeError or AssertionError:
-            logging.info('Sender is not Automation for JIRA')
-        try:
-            if self.webhook_body.get('webhookEvent').startswith('jira:'):
-                self.webhook_sender = 'jira'
-                logging.info('Sender is JIRA')
-                return True
-        except TypeError or AssertionError:
-            logging.info('Sender is not JIRA')
+        if 'self' in self.webhook_body.keys() and \
+                'key' in self.webhook_body.keys() and \
+                'fields' in self.webhook_body.keys():
+            self.webhook_sender = 'a4j'
+            logging.info('Sender is Automation for Jira')
+            return True
+        if 'timestamp' in self.webhook_body.keys() and \
+                'webhookEvent' in self.webhook_body.keys() and \
+                'issue_event_type_name' in self.webhook_body.keys() and \
+                'user' in self.webhook_body.keys() and \
+                'issue' in self.webhook_body.keys() and \
+                'comment' in self.webhook_body.keys():
+            self.webhook_sender = 'jira'
+            logging.info('Sender is Jira Webhook')
+            return True
+        if 'type' in self.webhook_body.keys() and \
+                'occur_at' in self.webhook_body.keys() and \
+                'operator' in self.webhook_body.keys() and \
+                'event_data' in self.webhook_body.keys():
+            self.webhook_sender = 'harbor'
+            logging.info('Sender is Harbor')
+            return True
 
     def parse_jira_webhook(self):
         self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '')
