@@ -1,0 +1,3 @@
+#### {{key}} {{fields.summary}}
+
+{{fields.creator.displayName}} 新建了 {{fields.issuetype.name}} [{{key}} {{fields.summary}}](http://0.0.0.0/browse/{{key}})

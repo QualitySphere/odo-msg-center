@@ -1,0 +1,5 @@
+- tag: text
+  text: "{{fields.creator.displayName}} 新建了 {{fields.issuetype.name}} "
+- tag: a
+  text: "{{key}} {{fields.summary}}"
+  href: "http://0.0.0.0/browse/{{key}}"
