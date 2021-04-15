@@ -1,11 +1,9 @@
+{% set issue_key = comment.self.split('/')[-3] %}
+
 -
   - tag: text
-    {% set last_comment = comment.comments | last %}
-    text: "{{last_comment.updateAuthor.displayName}} 评论了 {{fields.issuetype.name}} "
+    text: "{{comment.updateAuthor.displayName}} 曰： "
 -
   - tag: a
-    text: "{{key}} {{fields.summary}}"
-    href: "http://0.0.0.0/browse/{{key}}"
--
-  - tag: text
-    text: "{{last_comment.body}}""
+    text: "{{comment.body}}"
+    href: "http://0.0.0.0/issues/?jql={{issue_Key}}"

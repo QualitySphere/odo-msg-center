@@ -1,6 +1,6 @@
 -
   - tag: text
-    text: "{{event_data.resources[0].resource_url}} 构建并推送成功"
+    text: "{{event_data.resources[0].resource_url}} 构建完成并推送成功"
 -
   - tag: text
     text: "{{event_data.resources[0].digest}}"

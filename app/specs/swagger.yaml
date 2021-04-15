@@ -116,12 +116,6 @@ paths:
           schema:
             type: string
             example: jira-comment
-        - name: key
-          in: query
-          required: true
-          schema:
-            type: string
-            example: ODO-61
       requestBody:
         content:
           application/json:
