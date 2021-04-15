@@ -1,0 +1,45 @@
+# https://docs.github.com/en/actions/quickstart
+# https://docs.github.com/en/actions/reference
+
+name: Branch Trigger Docker Image CI
+
+on:
+  push:
+    tags:
+      - '**'
+
+env:
+  ALI_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+  ALI_REPO: registry.cn-hangzhou.aliyuncs.com/bxwill
+  IMG_REPO: bxwill
+  IMG_NAME: odo-msg
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag ${IMG_REPO}/${IMG_NAME}:${GITHUB_SHA}
+    - name: Push the Docker image
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+        img_tag=$(echo "${GITHUB_REF}" | awk -F 'refs/tags/' '{print $NF}')
+        docker tag ${IMG_REPO}/${IMG_NAME}:${GITHUB_SHA} ${IMG_REPO}/${IMG_NAME}:${img_tag}
+        docker push ${IMG_REPO}/${IMG_NAME}:${img_tag}
+        docker tag ${IMG_REPO}/${IMG_NAME}:${GITHUB_SHA} ${IMG_REPO}/${IMG_NAME}:latest
+        docker push ${IMG_REPO}/${IMG_NAME}:latest
+    - name: Push the Docker image to ALI registry
+      run: |
+        echo "${{ secrets.ALI_DC_PASSWORD }}" | docker login -u ${{ secrets.ALI_DC_USER }} --password-stdin ${ALI_REGISTRY}
+        img_tag=$(echo "${GITHUB_REF}" | awk -F 'refs/tags/' '{print $NF}')
+        docker tag ${IMG_REPO}/${IMG_NAME}:${GITHUB_SHA} ${ALI_REPO}/${IMG_NAME}:${img_tag}
+        docker push ${ALI_REPO}/${IMG_NAME}:${img_tag}
+        docker tag ${IMG_REPO}/${IMG_NAME}:${GITHUB_SHA} ${ALI_REPO}/${IMG_NAME}:latest
+        docker push ${ALI_REPO}/${IMG_NAME}:latest

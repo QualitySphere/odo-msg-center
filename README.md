@@ -15,6 +15,8 @@ services:
     image: bxwill/odo-msg
     ports:
     - 80:80
+    volumes:
+      - template:/workspace/template
     environment:
       JENKINS_URL: ''
       JENKINS_USER: ''
