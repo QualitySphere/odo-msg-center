@@ -1,0 +1,2 @@
+- tag: text
+  text: "{{env.name}} 成功部署 {{product.name}} {{product.version}}"

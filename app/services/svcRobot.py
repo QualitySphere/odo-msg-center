@@ -14,7 +14,9 @@ from base64 import b64encode
 from WorkWeixinRobot.work_weixin_robot import WWXRobot
 import yaml
 from app.services.svcParser import parse_webhook
-import jinja2
+from jinja2 import Environment as jj2Environment
+from jinja2 import FileSystemLoader as jj2FileSystemLoader
+from jinja2.exceptions import TemplateNotFound, UndefinedError
 
 
 def msg_content(tmpl, body):
@@ -29,9 +31,17 @@ def msg_content(tmpl, body):
     _event = _body.get('event')
     _title = _body.get('title')
     _data = _body.get('content')
-    jj2env = jinja2.Environment(loader=jinja2.FileSystemLoader('template'))
-    jj2tmpl = jj2env.get_template(tmpl)
-    _content_raw = jj2tmpl.render(_data)
+    jj2env = jj2Environment(loader=jj2FileSystemLoader('template'))
+    try:
+        jj2tmpl = jj2env.get_template(tmpl)
+    except TemplateNotFound as e:
+        logging.error(e.message)
+        raise FileNotFoundError("Failed to get template")
+    try:
+        _content_raw = jj2tmpl.render(_data)
+    except UndefinedError as e:
+        logging.error(e.message)
+        raise KeyError("Failed to render template")
     if tmpl.startswith('fs-'):
         _content = yaml.full_load(_content_raw)
     else:
