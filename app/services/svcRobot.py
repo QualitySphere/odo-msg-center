@@ -65,7 +65,7 @@ def msg_content(tmpl, body):
         logging.error("Failed to render template")
         raise KeyError(e.message)
     # 结束
-    # 开始 # 检查内容中是否包含 @用户 信息
+    # 开始 # 检查内容中是否包含 @用户 信息: 格式有可能为 @user [~user]
     # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
     # 若能转换，则替换原 @用户 字符串，并记录下来
     _users = list()
@@ -76,6 +76,12 @@ def msg_content(tmpl, body):
             if _im_user:
                 logging.info('User %s in IM is %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
+                _users.append(_im_user)
+        if '[~%s]' % _user in _content_raw:
+            _im_user = change_user_value(_user)
+            if _im_user:
+                logging.info('User %s in IM is %s' % (_user, _im_user))
+                _content_raw = _content_raw.replace('[~%s]' % _user, '[~%s]' % _im_user)
                 _users.append(_im_user)
     # 结束
     # 开始 # 若有需要 @用户 就替换标题中的 @you
