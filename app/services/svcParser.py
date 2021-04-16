@@ -45,9 +45,9 @@ class OdoParse(object):
         :return:
         """
         try:
-            _user = None
+            _user = self.webhook_body
             for _key in key_smart_path.split('.'):
-                _item = self.webhook_body[_key]
+                _user = _user[_key]
             if _user:
                 logging.info('Found user %s in origin webhook' % _user)
                 self.webhook_users.append(_user)
