@@ -3,19 +3,32 @@
 #### Scenarios
 
 - Message Robot
-  - Jira tell you someone creates an issue
-  - Jira tell you an issue has been fixed
-  - Harbor tell you new image pushed
-  - CI/CD tell you automation test complete
-  - Webhook tell you something start/complete
-  
+
+  Event | Title
+  ----|----
+  Jira user creates an issue | Attention! Jira @you
+  Jira user assign an issue | Attention! Jira `@ASSIGNEE`
+  Jira user change issue status to fixed | Attention! Jira `@REPORTER` 
+  Jira issue comment @you | Attention! Jira `@YOU`
+  New image pushed into Harbor | Great! Harbor @you
+  Automation test complete and 100% PASS | Wonderful! CI/CD @you
+  Automation test complete but NOT 100% PASS | Oops! CI/CD @you
+  Daily issue status | Issue Daily Report
+  Daily test case execution process | Testing Daily Report
+
 - PM Automation
-  - Webhook add jira issue comment 
-  - Webhook trigger jira issue status transition
-  
+
+  Event | Action
+  ----|----
+  CI/CD pipeline complete | Add Jira issue comment
+  CI/CD pipeline complete | Change Jira issue status 
+
 - CI/CD Trigger
-  - Harbor trigger jenkins pipeline
-  - GitLab trigger jenkins pipeline
+
+  Event | Trigger
+  ----|----
+  Image pushed into Harbor | Jenkins pipeline
+  Code pushed into GitLab | Jenkins pipeline
 
 #### OpenAPI Doc
 

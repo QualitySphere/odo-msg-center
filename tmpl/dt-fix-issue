@@ -1,3 +1,3 @@
-#### {{key}} {{fields.summary}}
+#### [{{key}} {{fields.summary}}](http://0.0.0.0/browse/{{key}})
 
-{{fields.issuetype.name}} [{{key}} {{fields.summary}}](http://0.0.0.0/browse/{{key}}) 已被修复，请 @{{fields.reporter.name}} 尽快验证。
+该 {{fields.issuetype.name}} 已被修复，请 @{{fields.reporter.name}} 尽快验证。

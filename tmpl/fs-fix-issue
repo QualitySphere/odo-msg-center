@@ -1,7 +1,7 @@
 -
-  - tag: text
-    text: "一个 {{fields.issuetype.name}} 被修复"
--
   - tag: a
     text: "{{key}} {{fields.summary}}"
     href: "http://0.0.0.0/browse/{{key}}"
+-
+  - tag: text
+    text: "该 {{fields.issuetype.name}} 已被修复，请 @{{fields.reporter.displayName}} 尽快验证。"

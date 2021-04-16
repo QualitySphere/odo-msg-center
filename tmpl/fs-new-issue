@@ -1,7 +1,7 @@
 -
-  - tag: text
-    text: "{{fields.creator.displayName}} 上报了一个 {{fields.issuetype.name}} "
--
   - tag: a
     text: "{{key}} {{fields.summary}}"
     href: "http://0.0.0.0/browse/{{key}}"
+-
+  - tag: text
+    text: "{{fields.creator.displayName}} 上报了该 {{fields.issuetype.name}} "
