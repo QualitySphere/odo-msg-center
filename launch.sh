@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+
 echo "Check template"
 if [ -d template ]; then
     echo "Check and generate template files"
@@ -17,6 +18,25 @@ else
     cp -R tmpl template
 fi
 echo "Check complete"
-echo "Start MSG Center APP"
+
+echo "Check config"
+if [ -d config ]; then
+    echo "Check and generate config files"
+    for cfg_file in $(ls cfg)
+    do
+        if [ -f config/$cfg_file ]; then
+            echo "Config file: $cfg_file exists"
+        else
+            echo "Copy config file: $cfg_file"
+            cp cfg/$cfg_file config/
+        fi
+    done
+else
+    echo "Generate config dir and files"
+    cp -R cfg config
+fi
+echo "Check complete"
+
+echo "Start OpenDevOps MSG Center APP"
 export PYTHONPATH=$PWD
 python app/run.py

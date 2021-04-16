@@ -48,6 +48,7 @@ services:
       - 80:80
     volumes:
       - ./template:/workspace/template
+      - ./config:/workspace/config
     environment:
       JIRA_URL: ''
       JIRA_USER: ''
