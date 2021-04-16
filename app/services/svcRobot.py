@@ -34,7 +34,7 @@ def change_user_value(user):
         with open(os.path.join('config', 'users.yaml'), 'r', encoding='utf-8') as f:
             _values = yaml.full_load(f.read())
             _value_type = list(_values.keys())[0]
-            return _values[_value_type].get(user)
+            return str(_values[_value_type].get(user))
     except Exception as e:
         logging.error("Failed to get user value")
         raise KeyError(e)
@@ -74,7 +74,7 @@ def msg_content(tmpl, body):
         if '@%s' % _user in _content_raw:
             _im_user = change_user_value(_user)
             if _im_user:
-                logging.info('User %s is %s in IM' % (_user, _im_user))
+                logging.info('User %s in IM is %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
                 _users.append(_im_user)
     # 结束
@@ -207,6 +207,7 @@ def dt(tmpl, body):
     # 开始 # 如果内容中包含用户，就检查是否需要 at，若需要就在请求体中加上 at 部分
     if len(_content.get('users')) != 0:
         _user_value_type = check_user_value_type()
+        logging.info("IM user type is %s" % _user_value_type)
         if _user_value_type == 'mobile':
             _body["at"] = {
                 "atMobiles": _content['users']
