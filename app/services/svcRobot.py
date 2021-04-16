@@ -81,7 +81,7 @@ def msg_content(tmpl, body):
     # 开始 # 若有需要 @用户 就替换标题中的 @you
     if len(_users) != 0:
         logging.info('Will attention users in message: %s' % _users)
-        _title = _title.replace('@you', ' @'.join(_users))
+        _title = _title.replace('@you', '@%s' % ' @'.join(_users))
     # 结束
     # 由于飞书得使用 json object，所以需要把 yaml 模板转成 dict
     if tmpl.startswith('fs-'):
