@@ -38,19 +38,25 @@ class OdoParse(object):
             logging.info('Sender is Harbor')
             return True
 
-    def parse_jira_webhook(self):
-        self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
-        self.webhook_title = 'Attention! Jira @you'
-        self.webhook_content = self.webhook_body
-        return True
-
-    def parse_jira_a4j_webhook(self):
-        if self.webhook_body['changelog']['total'] == 0:
-            self.webhook_event = 'Create'
-        else:
-            self.webhook_event = 'Update'
-        self.webhook_title = 'Attention! Jira @you'
-        self.webhook_content = self.webhook_body
+    def parse_user(self):
+        """
+        解析 webhook 中的用户信息
+        :return:
+        """
+        # JIRA Webhook: add comment
+        try:
+            _jira_user = self.webhook_body['comment']['author']['name']
+            if _jira_user:
+                self.webhook_users.append(_jira_user)
+        except Exception as e:
+            logging.info(e)
+        try:
+            _jira_user = self.webhook_body['comment']['updateAuthor']['name']
+            if _jira_user:
+                self.webhook_users.append(_jira_user)
+        except Exception as e:
+            logging.info(e)
+        # Automation for JIRA Webhook: create issue, assign issue, fix issue
         try:
             _jira_user = self.webhook_body['fields']['creator']['name']
             if _jira_user:
@@ -69,6 +75,20 @@ class OdoParse(object):
                 self.webhook_users.append(_jira_user)
         except Exception as e:
             logging.info(e)
+
+    def parse_jira_webhook(self):
+        self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
+        self.webhook_title = 'Attention! Jira @you'
+        self.webhook_content = self.webhook_body
+        return True
+
+    def parse_jira_a4j_webhook(self):
+        if self.webhook_body['changelog']['total'] == 0:
+            self.webhook_event = 'Create'
+        else:
+            self.webhook_event = 'Update'
+        self.webhook_title = 'Attention! Jira @you'
+        self.webhook_content = self.webhook_body
         return True
 
     def parse_gitlab_webhook(self):
@@ -113,6 +133,7 @@ class OdoParse(object):
 def parse_webhook(webhook_body):
     odo_parse = OdoParse(webhook_body)
     odo_parse.parse_sender()
+    odo_parse.parse_user()
     return odo_parse.parse_webhook()
 
 
