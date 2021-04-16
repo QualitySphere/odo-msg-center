@@ -19,6 +19,20 @@ from jinja2 import FileSystemLoader as jj2FileSystemLoader
 from jinja2.exceptions import TemplateNotFound, UndefinedError
 
 
+def check_user_value_type():
+    with open(os.path.join('config', 'user.yaml'), 'r', encoding='utf-8') as f:
+        _values = yaml.full_load(f.read())
+        _value_type = _values.keys()[0]
+        return _value_type
+
+
+def change_user_value(user):
+    with open(os.path.join('config', 'user.yaml'), 'r', encoding='utf-8') as f:
+        _values = yaml.full_load(f.read())
+        _value_type = _values.keys()[0]
+        return _values[_value_type].get(user)
+
+
 def msg_content(tmpl, body):
     """
     解析 body
@@ -31,6 +45,7 @@ def msg_content(tmpl, body):
     _event = _body.get('event')
     _title = _body.get('title')
     _data = _body.get('content')
+    # 开始 # 利用 jinja2 渲染模板
     jj2env = jj2Environment(loader=jj2FileSystemLoader('template'))
     try:
         jj2tmpl = jj2env.get_template(tmpl)
@@ -42,12 +57,31 @@ def msg_content(tmpl, body):
     except UndefinedError as e:
         logging.error(e.message)
         raise KeyError("Failed to render template")
+    # 结束
+    # 开始 # 检查内容中是否包含 @用户 信息
+    # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
+    # 若能转换，则替换原 @用户 字符串，并记录下来
+    _users = list()
+    for _user in _body.get('users'):
+        if '@%s' % _user in _content_raw:
+            _im_user = change_user_value(_user)
+            if _im_user:
+                _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
+                _users.append(_im_user)
+    # 结束
+    # 开始 # 若有需要 @用户 就替换标题中的 @you
+    if len(_users) != 0:
+        _title = _title.replace('@you', ' @'.join(_users))
+    # 结束
+    # 由于飞书得使用 json object，所以需要把 yaml 模板转成 dict
     if tmpl.startswith('fs-'):
         _content = yaml.full_load(_content_raw)
     else:
         _content = _content_raw
+    # 结束
     _msg = {
         "sender": _sender,
+        "users": _users,
         "event": _event,
         'title': _title,
         'content': _content,
@@ -126,11 +160,13 @@ def dt(tmpl, body):
     :param body:
     :return:
     """
+    # 开始 # 钉钉通知需要使用 token 和 secret，检查环境变量是否有这两个值
     _dt_token = os.getenv('DT_TOKEN')
     _dt_secret = os.getenv('DT_SECRET')
     if not _dt_token or not _dt_secret:
         logging.error('Need provide DT_TOKEN, DT_SECRET')
         raise AssertionError
+    # 结束
 
     _url = 'https://oapi.dingtalk.com/robot/send'
     _headers = {
@@ -158,6 +194,18 @@ def dt(tmpl, body):
             "text": _content.get('content')
         }
     }
+    # 开始 # 如果内容中包含用户，就检查是否需要 at，若需要就在请求体中加上 at 部分
+    if len(_content.get('users')) != 0:
+        _user_value_type = check_user_value_type()
+        if _user_value_type == 'mobile':
+            _body["at"] = {
+                "atMobiles": _content['users']
+            }
+        elif _user_value_type == 'userid':
+            _body["at"] = {
+                "atUserIds": _content['users']
+            }
+    # 结束
     logging.info('%s POST %s?access_token=%s' % (_content['sender'], _url, _params['access_token']))
     logging.info(_body['markdown'])
     _rsp = requests.post(url=_url, params=_params, headers=_headers, json=_body)

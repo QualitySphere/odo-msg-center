@@ -12,6 +12,7 @@ class OdoParse(object):
     def __init__(self, webhook_body):
         self.webhook_body = webhook_body
         self.webhook_sender = str()
+        self.webhook_users = list()
         self.webhook_event = str()
         self.webhook_title = str()
         self.webhook_content = dict()
@@ -39,7 +40,7 @@ class OdoParse(object):
 
     def parse_jira_webhook(self):
         self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
-        self.webhook_title = 'Attention! Jira tell you'
+        self.webhook_title = 'Attention! Jira @you'
         self.webhook_content = self.webhook_body
         return True
 
@@ -48,8 +49,26 @@ class OdoParse(object):
             self.webhook_event = 'Create'
         else:
             self.webhook_event = 'Update'
-        self.webhook_title = 'Attention! Jira tell you'
+        self.webhook_title = 'Attention! Jira @you'
         self.webhook_content = self.webhook_body
+        try:
+            _jira_user = self.webhook_body['fields']['creator']['name']
+            if _jira_user:
+                self.webhook_users.append(_jira_user)
+        except KeyError as e:
+            logging.info(e)
+        try:
+            _jira_user = self.webhook_body['fields']['reporter']['name']
+            if _jira_user:
+                self.webhook_users.append(_jira_user)
+        except KeyError as e:
+            logging.info(e)
+        try:
+            _jira_user = self.webhook_body['fields']['assignee']['name']
+            if _jira_user:
+                self.webhook_users.append(_jira_user)
+        except KeyError as e:
+            logging.info(e)
         return True
 
     def parse_gitlab_webhook(self):
@@ -58,7 +77,7 @@ class OdoParse(object):
 
     def parse_harbor_webhook(self):
         self.webhook_event = self.webhook_body['type'].replace('_', ' ').capitalize()
-        self.webhook_title = 'GREAT! Harbor tell you'
+        self.webhook_title = 'GREAT! Harbor @you'
         self.webhook_content = self.webhook_body
         return True
 
@@ -67,7 +86,7 @@ class OdoParse(object):
             self.webhook_event = self.webhook_body.get('event')
         if not self.webhook_body.get('sender'):
             self.webhook_body['sender'] = 'MSG Center'
-        self.webhook_title = '%s tell you' % self.webhook_body['sender']
+        self.webhook_title = '%s @you' % self.webhook_body['sender']
         self.webhook_content = self.webhook_body
         return True
 
@@ -84,6 +103,7 @@ class OdoParse(object):
             self.parse_custom_webhook()
         return {
             "sender": self.webhook_sender,
+            "users": list(set(self.webhook_users)),
             "event": self.webhook_event,
             "title": self.webhook_title,
             "content": self.webhook_content,
