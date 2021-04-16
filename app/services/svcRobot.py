@@ -25,8 +25,8 @@ def check_user_value_type():
             _values = yaml.full_load(f.read())
             return list(_values.keys())[0]
     except Exception as e:
-        logging.error("Failed to check user value type")
-        raise KeyError(e)
+        logging.error("Failed to check user value type\n%s" % e)
+        return False
 
 
 def change_user_value(user):
@@ -36,8 +36,8 @@ def change_user_value(user):
             _value_type = list(_values.keys())[0]
             return str(_values[_value_type].get(user))
     except Exception as e:
-        logging.error("Failed to get user value")
-        raise KeyError(e)
+        logging.error("Failed to get user value\n%s" % e)
+        return False
 
 
 def msg_content(tmpl, body):
