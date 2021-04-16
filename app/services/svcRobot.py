@@ -20,17 +20,24 @@ from jinja2.exceptions import TemplateNotFound, UndefinedError
 
 
 def check_user_value_type():
-    with open(os.path.join('config', 'user.yaml'), 'r', encoding='utf-8') as f:
-        _values = yaml.full_load(f.read())
-        _value_type = _values.keys()[0]
-        return _value_type
+    try:
+        with open(os.path.join('config', 'users.yaml'), 'r', encoding='utf-8') as f:
+            _values = yaml.full_load(f.read())
+            return list(_values.keys())[0]
+    except Exception as e:
+        logging.error(e)
+        raise KeyError(e)
 
 
 def change_user_value(user):
-    with open(os.path.join('config', 'user.yaml'), 'r', encoding='utf-8') as f:
-        _values = yaml.full_load(f.read())
-        _value_type = _values.keys()[0]
-        return _values[_value_type].get(user)
+    try:
+        with open(os.path.join('config', 'users.yaml'), 'r', encoding='utf-8') as f:
+            _values = yaml.full_load(f.read())
+            _value_type = list(_values.keys())[0]
+            return _values[_value_type].get(user)
+    except Exception as e:
+        logging.error(e)
+        raise KeyError(e)
 
 
 def msg_content(tmpl, body):
