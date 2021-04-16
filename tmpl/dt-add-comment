@@ -2,4 +2,4 @@
 
 #### {{comment.updateAuthor.displayName}} 曰：
 
-[{{comment.body}}](http://0.0.0.0/issues/?jql={{issue_key}})
+[{{comment.body}}](http://0.0.0.0/issues/?jql=issuekey%3D{{issue_key}})

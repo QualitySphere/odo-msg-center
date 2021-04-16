@@ -6,4 +6,4 @@
 -
   - tag: a
     text: "{{comment.body}}"
-    href: "http://0.0.0.0/issues/?jql={{issue_Key}}"
+    href: "http://0.0.0.0/issues/?jql=issuekey%3D{{issue_Key}}"

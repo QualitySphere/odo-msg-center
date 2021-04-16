@@ -81,7 +81,7 @@ def msg_content(tmpl, body):
             _im_user = change_user_value(_user)
             if _im_user:
                 logging.info('User %s in IM is %s' % (_user, _im_user))
-                _content_raw = _content_raw.replace('[~%s]' % _user, '[~%s]' % _im_user)
+                _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
                 _users.append(_im_user)
     # 结束
     # 开始 # 若有需要 @用户 就替换标题中的 @you

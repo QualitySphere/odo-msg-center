@@ -38,48 +38,35 @@ class OdoParse(object):
             logging.info('Sender is Harbor')
             return True
 
-    def parse_user(self):
+    def parse_user(self, key_smart_path: str):
         """
         解析 webhook 中的用户信息
+        :param key_smart_path: user key path. e.g. 'comment.author.name'
         :return:
         """
-        # JIRA Webhook: add comment
         try:
-            _jira_user = self.webhook_body['comment']['author']['name']
-            if _jira_user:
-                self.webhook_users.append(_jira_user)
+            _user = None
+            for _key in key_smart_path.split('.'):
+                _item = self.webhook_body[_key]
+            if _user:
+                logging.info('Found user %s in origin webhook' % _user)
+                self.webhook_users.append(_user)
         except Exception as e:
-            logging.info(e)
-        try:
-            _jira_user = self.webhook_body['comment']['updateAuthor']['name']
-            if _jira_user:
-                self.webhook_users.append(_jira_user)
-        except Exception as e:
-            logging.info(e)
-        # Automation for JIRA Webhook: create issue, assign issue, fix issue
-        try:
-            _jira_user = self.webhook_body['fields']['creator']['name']
-            if _jira_user:
-                self.webhook_users.append(_jira_user)
-        except Exception as e:
-            logging.info(e)
-        try:
-            _jira_user = self.webhook_body['fields']['reporter']['name']
-            if _jira_user:
-                self.webhook_users.append(_jira_user)
-        except Exception as e:
-            logging.info(e)
-        try:
-            _jira_user = self.webhook_body['fields']['assignee']['name']
-            if _jira_user:
-                self.webhook_users.append(_jira_user)
-        except Exception as e:
-            logging.info(e)
+            logging.info('User path not found\n%s' % e)
 
     def parse_jira_webhook(self):
         self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
         self.webhook_title = 'Attention! Jira @you'
         self.webhook_content = self.webhook_body
+        self.parse_user('comment.author.name')
+        self.parse_user('comment.updateAuthor.name')
+        # 为 评论的 jira webhook 单独处理
+        try:
+            for _item in self.webhook_body['comment']['body'].split():
+                if _item.startswith('[~') and _item.endswith(']'):
+                    self.webhook_users.append(_item.replace('[~', '').replace(']', ''))
+        except Exception as e:
+            logging.info('User info not found\n%s' % e)
         return True
 
     def parse_jira_a4j_webhook(self):
@@ -89,6 +76,9 @@ class OdoParse(object):
             self.webhook_event = 'Update'
         self.webhook_title = 'Attention! Jira @you'
         self.webhook_content = self.webhook_body
+        self.parse_user('fields.creator.name')
+        self.parse_user('fields.reporter.name')
+        self.parse_user('fields.assignee.name')
         return True
 
     def parse_gitlab_webhook(self):
@@ -133,7 +123,6 @@ class OdoParse(object):
 def parse_webhook(webhook_body):
     odo_parse = OdoParse(webhook_body)
     odo_parse.parse_sender()
-    odo_parse.parse_user()
     return odo_parse.parse_webhook()
 
 
