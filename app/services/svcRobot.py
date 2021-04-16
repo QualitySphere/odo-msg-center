@@ -25,7 +25,7 @@ def check_user_value_type():
             _values = yaml.full_load(f.read())
             return list(_values.keys())[0]
     except Exception as e:
-        logging.error(e)
+        logging.error("Failed to check user value type")
         raise KeyError(e)
 
 
@@ -36,7 +36,7 @@ def change_user_value(user):
             _value_type = list(_values.keys())[0]
             return _values[_value_type].get(user)
     except Exception as e:
-        logging.error(e)
+        logging.error("Failed to get user value")
         raise KeyError(e)
 
 
@@ -57,13 +57,13 @@ def msg_content(tmpl, body):
     try:
         jj2tmpl = jj2env.get_template(tmpl)
     except TemplateNotFound as e:
-        logging.error(e.message)
-        raise FileNotFoundError("Failed to get template")
+        logging.error("Failed to get template")
+        raise FileNotFoundError(e.message)
     try:
         _content_raw = jj2tmpl.render(_data)
     except UndefinedError as e:
-        logging.error(e.message)
-        raise KeyError("Failed to render template")
+        logging.error("Failed to render template")
+        raise KeyError(e.message)
     # 结束
     # 开始 # 检查内容中是否包含 @用户 信息
     # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
@@ -109,7 +109,7 @@ def wwx(tmpl, body):
     """
     _wwx_key = os.getenv('WWX_ROBOT_KEY')
     if not _wwx_key:
-        logging.error('Need provide WWX_ROBOT_KEY')
+        logging.error('WWX_ROBOT_KEY is required')
         raise AssertionError
     _wwx = WWXRobot(key=_wwx_key)
     _content = msg_content(tmpl, body)
@@ -126,7 +126,7 @@ def fs(tmpl, body):
     _fs_token = os.getenv('FS_TOKEN')
     _fs_secret = os.getenv('FS_SECRET')
     if not _fs_token or not _fs_secret:
-        logging.error('Need provide FS_TOKEN, FS_SECRET')
+        logging.error('FS_TOKEN, FS_SECRET is required')
         raise AssertionError
 
     _url = 'https://open.feishu.cn/open-apis/bot/v2/hook/%s' % _fs_token
@@ -174,7 +174,7 @@ def dt(tmpl, body):
     _dt_token = os.getenv('DT_TOKEN')
     _dt_secret = os.getenv('DT_SECRET')
     if not _dt_token or not _dt_secret:
-        logging.error('Need provide DT_TOKEN, DT_SECRET')
+        logging.error('DT_TOKEN, DT_SECRET is required')
         raise AssertionError
     # 结束
 

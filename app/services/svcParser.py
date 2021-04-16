@@ -55,19 +55,19 @@ class OdoParse(object):
             _jira_user = self.webhook_body['fields']['creator']['name']
             if _jira_user:
                 self.webhook_users.append(_jira_user)
-        except KeyError as e:
+        except Exception as e:
             logging.info(e)
         try:
             _jira_user = self.webhook_body['fields']['reporter']['name']
             if _jira_user:
                 self.webhook_users.append(_jira_user)
-        except KeyError as e:
+        except Exception as e:
             logging.info(e)
         try:
             _jira_user = self.webhook_body['fields']['assignee']['name']
             if _jira_user:
                 self.webhook_users.append(_jira_user)
-        except KeyError as e:
+        except Exception as e:
             logging.info(e)
         return True
 
