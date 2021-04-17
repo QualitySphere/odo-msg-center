@@ -16,6 +16,15 @@
   Daily issue status | Issue Daily Report
   Daily test case execution process | Testing Daily Report
 
+  - Message format specification
+
+    Robot | Type
+    ----|----
+    Work WeiXin | [Markdown](https://work.weixin.qq.com/api/doc/90000/90136/91770#markdown类型)
+    DingTalk | [Markdown](https://developers.dingtalk.com/document/app/custom-robot-access/li-p7l-mkl-y1g)
+    FeiShu | [Post](https://open.feishu.cn/document/ukTMukTMukTM/uMDMxEjLzATMx4yMwETM?op_tracking=hc#c48c9c2a)
+
+
 - PM Automation
 
   Event | Action
