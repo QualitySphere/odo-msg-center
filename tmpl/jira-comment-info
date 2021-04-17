@@ -1,0 +1,1 @@
+(i) {color:#ff8b00}*{{executor.name}}*{color} 流水线 [{{executor.url}} {{executor.build.name}}|{{executor.build.url}}] [{color:#3b73af}*开始执行*{color}]
