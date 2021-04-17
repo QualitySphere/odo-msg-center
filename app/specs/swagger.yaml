@@ -45,6 +45,7 @@ paths:
         - "msg"
       parameters:
         - name: tmpl
+          description: 消息模板名称，模板都存放在 template 目录中
           in: query
           required: true
           schema:
@@ -67,6 +68,7 @@ paths:
         - "msg"
       parameters:
         - name: tmpl
+          description: 消息模板名称，模板都存放在 template 目录中
           in: query
           required: true
           schema:
@@ -89,6 +91,7 @@ paths:
         - "msg"
       parameters:
         - name: tmpl
+          description: 消息模板名称，模板都存放在 template 目录中
           in: query
           required: true
           schema:
@@ -111,11 +114,19 @@ paths:
         - "pm"
       parameters:
         - name: tmpl
+          description: 消息模板名称，模板都存放在 template 目录中
           in: query
           required: true
           schema:
             type: string
             example: jira-comment
+        - name: key
+          description: Jira Issue Key
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ODO-61
       requestBody:
         content:
           application/json:

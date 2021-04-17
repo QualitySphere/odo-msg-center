@@ -3,8 +3,8 @@
 # Author: v.stone@163.com
 
 
-import os
-import yaml
+# import os
+# import yaml
 import logging
 
 
@@ -127,4 +127,4 @@ def parse_webhook(webhook_body):
 
 
 if __name__ == '__main__':
-    print('This is Python scripts')
+    print('This is Python scripts to PARSE WEBHOOK')

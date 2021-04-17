@@ -30,7 +30,8 @@
   Event | Action
   ----|----
   CI/CD pipeline complete | Add Jira issue comment
-  CI/CD pipeline complete | Change Jira issue status 
+
+[comment]: <> (  CI/CD pipeline complete | Change Jira issue status )
 
 - CI/CD Trigger
 

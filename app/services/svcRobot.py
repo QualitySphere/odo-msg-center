@@ -4,7 +4,7 @@
 
 
 import requests
-from urllib.parse import urlparse
+# from urllib.parse import urlparse
 import os
 import logging
 from time import time
@@ -51,7 +51,7 @@ def change_user_value(user):
 
 def msg_content(tmpl, body):
     """
-    解析处理 body 中的信息，使之成为方便机器人接收的内容
+    解析处理 body 中的信息，渲染消息模板
     :param tmpl:
     :param body:
     :return:
@@ -251,4 +251,4 @@ def dt(tmpl, body):
 
 
 if __name__ == '__main__':
-    print('This is Python scripts')
+    print('This is Python scripts to SEND ROBOT MESSAGE')
