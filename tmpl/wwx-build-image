@@ -1,0 +1,5 @@
+#### {{event_data.resources[0].resource_url}}
+
+构建完成并推送成功
+
+{{event_data.resources[0].digest}}
