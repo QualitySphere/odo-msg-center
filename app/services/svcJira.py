@@ -59,7 +59,7 @@ def add_comment(tmpl, key, body):
     }
     logging.info('POST %s' % _url)
     logging.info(_body['body'])
-    _rsp = requests.post(url=_url, headers=_headers, json=_body)
+    _rsp = requests.post(url=_url, headers=_headers, auth=(_jira_user, _jira_pass), json=_body)
     assert _rsp.status_code == 200
     return _rsp.json()
 
