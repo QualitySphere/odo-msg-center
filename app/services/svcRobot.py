@@ -61,6 +61,7 @@ def msg_content(tmpl, body):
     _event = _body.get('event')
     _title = _body.get('title')
     _data = _body.get('content')
+
     # 开始 # 利用 jinja2 渲染模板
     jj2env = jj2Environment(loader=jj2FileSystemLoader('template'))
     try:
@@ -74,7 +75,8 @@ def msg_content(tmpl, body):
         logging.error("Failed to render template")
         raise KeyError(e.message)
     # 结束
-    # 开始 # 检查内容中是否包含 @用户 信息: 格式有可能为 @user [~user]
+
+    # 开始 # 检查内容中是否包含 @用户 信息: 格式有可能为 @user 或者 [~user]
     # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
     # 若能转换，则替换原 @用户 字符串，并记录下来
     _users = list()
@@ -93,17 +95,20 @@ def msg_content(tmpl, body):
                 _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
                 _users.append(_im_user)
     # 结束
+
     # 开始 # 若有需要 @用户 就替换标题中的 @you
     if len(_users) != 0:
         logging.info('Will attention users in message: %s' % _users)
         _title = _title.replace('@you', '@%s' % ' @'.join(_users))
     # 结束
+
     # 由于飞书得使用 json object，所以需要把 yaml 模板转成 dict
     if tmpl.startswith('fs-'):
         _content = yaml.full_load(_content_raw)
     else:
         _content = _content_raw
     # 结束
+
     _msg = {
         "sender": _sender,
         "users": _users,
