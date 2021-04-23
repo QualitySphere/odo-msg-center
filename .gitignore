@@ -5,3 +5,4 @@ docker-compose-debug.yml
 __pycache__/
 template/
 config/
+tool/

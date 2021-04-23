@@ -5,7 +5,7 @@
 
 import requests
 # from urllib.parse import urlparse
-import os
+# import os
 import logging
 from time import time
 from hashlib import sha256
@@ -13,40 +13,10 @@ import hmac
 from base64 import b64encode
 from WorkWeixinRobot.work_weixin_robot import WWXRobot
 import yaml
-from app.services.svcParser import parse_webhook
+from app.services.svcParser import parse_webhook, get_env_config, get_im_user
 from jinja2 import Environment as jj2Environment
 from jinja2 import FileSystemLoader as jj2FileSystemLoader
 from jinja2.exceptions import TemplateNotFound, UndefinedError
-
-
-def check_user_value_type():
-    """
-    检查并确定 config/users.yaml 的用户映射类型
-    :return:
-    """
-    try:
-        with open(os.path.join('config', 'users.yaml'), 'r', encoding='utf-8') as f:
-            _values = yaml.full_load(f.read())
-            return list(_values.keys())[0]
-    except Exception as e:
-        logging.error("Failed to check user value type\n%s" % e)
-        return False
-
-
-def change_user_value(user):
-    """
-    查找 config/user.yaml 中的数据并替换当前用户的值
-    :param user: webhook 中用户的名称
-    :return:
-    """
-    try:
-        with open(os.path.join('config', 'users.yaml'), 'r', encoding='utf-8') as f:
-            _values = yaml.full_load(f.read())
-            _value_type = list(_values.keys())[0]
-            return str(_values[_value_type].get(user))
-    except Exception as e:
-        logging.error("Failed to get user value\n%s" % e)
-        return False
 
 
 def msg_content(tmpl, body):
@@ -79,27 +49,25 @@ def msg_content(tmpl, body):
     # 开始 # 检查内容中是否包含 @用户 信息: 格式有可能为 @user 或者 [~user]
     # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
     # 若能转换，则替换原 @用户 字符串，并记录下来
-    _users = list()
+    _at_users = list()
     for _user in _body.get('users'):
         logging.info('Found user %s in message' % _user)
-        if '@%s' % _user in _content_raw:
-            _im_user = change_user_value(_user)
-            if _im_user:
+        _im_user = get_im_user(_user)
+        if _im_user:
+            if '@%s' % _user in _content_raw:
                 logging.info('User %s in IM is %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
-                _users.append(_im_user)
-        if '[~%s]' % _user in _content_raw:
-            _im_user = change_user_value(_user)
-            if _im_user:
+                _at_users.append(_im_user)
+            if '[~%s]' % _user in _content_raw:
                 logging.info('User %s in IM is %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
-                _users.append(_im_user)
+                _at_users.append(_im_user)
     # 结束
 
     # 开始 # 若有需要 @用户 就替换标题中的 @you
-    if len(_users) != 0:
-        logging.info('Will attention users in message: %s' % _users)
-        _title = _title.replace('@you', '@%s' % ' @'.join(_users))
+    if len(_at_users) != 0:
+        logging.info('Will attention users in message: %s' % _at_users)
+        _title = _title.replace('@you', '@%s' % ' @'.join(_at_users))
     # 结束
 
     # 由于飞书得使用 json object，所以需要把 yaml 模板转成 dict
@@ -111,7 +79,7 @@ def msg_content(tmpl, body):
 
     _msg = {
         "sender": _sender,
-        "users": _users,
+        "users": _at_users,
         "event": _event,
         'title': _title,
         'content': _content,
@@ -128,7 +96,7 @@ def wwx(tmpl, body):
     :return:
     """
     # 开始 # 企业微信通知需要使用机器人 key，检查环境变量中是否有 WWX_ROBOT_KEY
-    _wwx_key = os.getenv('WWX_ROBOT_KEY')
+    _wwx_key = get_env_config('WWX_ROBOT_KEY')
     if not _wwx_key:
         logging.error('WWX_ROBOT_KEY is required')
         raise EnvironmentError
@@ -147,8 +115,8 @@ def fs(tmpl, body):
     :return:
     """
     # 开始 # 飞书通知需要使用 token 和 secret, 检查环境变量中是否有 FS_TOKEN 和 FS_SECRET
-    _fs_token = os.getenv('FS_TOKEN')
-    _fs_secret = os.getenv('FS_SECRET')
+    _fs_token = get_env_config('FS_TOKEN')
+    _fs_secret = get_env_config('FS_SECRET')
     if not _fs_token or not _fs_secret:
         logging.error('FS_TOKEN, FS_SECRET is required')
         raise EnvironmentError
@@ -199,8 +167,8 @@ def dt(tmpl, body):
     :return:
     """
     # 开始 # 钉钉通知需要使用 token 和 secret，检查环境变量是否有这两个值
-    _dt_token = os.getenv('DT_TOKEN')
-    _dt_secret = os.getenv('DT_SECRET')
+    _dt_token = get_env_config('DT_TOKEN')
+    _dt_secret = get_env_config('DT_SECRET')
     if not _dt_token or not _dt_secret:
         logging.error('DT_TOKEN, DT_SECRET is required')
         raise EnvironmentError
@@ -235,7 +203,7 @@ def dt(tmpl, body):
 
     # 开始 # 如果内容中包含用户，就检查是否需要 at，若需要就在请求体中加上 at 部分
     if len(_content.get('users')) != 0:
-        _user_value_type = check_user_value_type()
+        _user_value_type = get_env_config('IM_USER_TYPE')
         logging.info("IM user type is %s" % _user_value_type)
         if _user_value_type == 'mobile':
             _body["at"] = {

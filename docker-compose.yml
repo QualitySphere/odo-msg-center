@@ -11,23 +11,7 @@ services:
     volumes:
       - ./template:/workspace/template
       - ./config:/workspace/config
-    environment:
-      DIRECTORY_TYPE: ''    # openldap, ad, crowd
-      DIRECTORY_HOST: ''
-      DIRECTORY_USER: ''
-      DIRECTORY_PASS: ''
-      DIRECTORY_IM_ID_KEY: ''
-      WWX_ROBOT_KEY: ''
-      DT_TOKEN: ''
-      DT_SECRET: ''
-      FS_TOKEN: ''
-      FS_SECRET: ''
-      JIRA_URL: ''
-      JIRA_USER: ''
-      JIRA_PASS: ''
-      JENKINS_URL: ''
-      JENKINS_USER: ''
-      JENKINS_TOKEN: ''
+
 networks:
   odo:
     driver: bridge

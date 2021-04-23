@@ -18,11 +18,11 @@
 
   - Message format specification
 
-    Robot | Type
-    ----|----
-    Work WeiXin | [Markdown](https://work.weixin.qq.com/api/doc/90000/90136/91770#markdown类型)
-    DingTalk | [Markdown](https://developers.dingtalk.com/document/app/custom-robot-access/li-p7l-mkl-y1g)
-    FeiShu | [Post](https://open.feishu.cn/document/ukTMukTMukTM/uMDMxEjLzATMx4yMwETM?op_tracking=hc#c48c9c2a)
+    Robot | Type | More 
+    ----|----|----
+    Work WeiXin | [Markdown](https://work.weixin.qq.com/api/doc/90000/90136/91770#markdown类型) | [GET access token](https://work.weixin.qq.com/api/doc/90000/90135/91039) <br> [GET users](https://work.weixin.qq.com/api/doc/90000/90135/90200)
+    DingTalk | [Markdown](https://developers.dingtalk.com/document/app/custom-robot-access/li-p7l-mkl-y1g) | [GET access token](https://developers.dingtalk.com/document/app/obtain-orgapp-token) <br> [GET users](https://developers.dingtalk.com/document/app/obtains-the-list-of-people-under-a-department)
+    FeiShu | [Post](https://open.feishu.cn/document/ukTMukTMukTM/uMDMxEjLzATMx4yMwETM?op_tracking=hc#c48c9c2a) | [POST app_access_token](https://open.feishu.cn/document/ukTMukTMukTM/uADN14CM0UjLwQTN) <br> [POST tenant_access_token](https://open.feishu.cn/document/ukTMukTMukTM/uIjNz4iM2MjLyYzM) <br> [GET users](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/contact-v3/user/list) <br> [GET userid](https://open.feishu.cn/document/ukTMukTMukTM/uUzMyUjL1MjM14SNzITN)
 
 
 - PM Automation

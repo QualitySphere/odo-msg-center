@@ -3,9 +3,13 @@
 # Author: v.stone@163.com
 
 
-# import os
-# import yaml
+import os
+import yaml
 import logging
+
+
+CONFIG_ENV_FILE = os.path.join('config', 'env.yaml')
+CONFIG_USERS_FILE = os.path.join('config', 'users.yaml')
 
 
 class OdoParse(object):
@@ -124,6 +128,26 @@ def parse_webhook(webhook_body):
     odo_parse = OdoParse(webhook_body)
     odo_parse.parse_sender()
     return odo_parse.parse_webhook()
+
+
+def get_env_config(env_name):
+    """
+    获取环境变量配置文件 config/env.yaml 中的环境变量
+    :param env_name:
+    :return:
+    """
+    with open(CONFIG_ENV_FILE, 'r', encoding='utf-8') as f:
+        return yaml.full_load(f.read()).get(env_name)
+
+
+def get_im_user(user):
+    """
+    查找 config/users.yaml 中当前用户的值
+    :param user: webhook 中用户的名称
+    :return:
+    """
+    with open(CONFIG_USERS_FILE, 'r', encoding='utf-8') as f:
+        return yaml.full_load(f.read()).get(user)
 
 
 if __name__ == '__main__':

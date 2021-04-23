@@ -1,8 +1,2 @@
-# 企业微信
-
-# 钉钉
-#userid:
-#mobile:
-#  admin: 18501599266
-
-# 飞书
+#jira_user_name: im_userid or im_mobile
+#admin: 18501599266
