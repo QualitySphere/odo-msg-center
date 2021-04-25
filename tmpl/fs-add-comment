@@ -2,7 +2,7 @@
 
 -
   - tag: text
-    text: "{{comment.updateAuthor.displayName}} 曰： "
+    text: "{{comment.updateAuthor.displayName}} 添加了一条评论： "
 -
   - tag: a
     text: "{{comment.body}}"

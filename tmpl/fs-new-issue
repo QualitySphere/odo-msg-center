@@ -5,3 +5,9 @@
 -
   - tag: text
     text: "{{fields.creator.displayName}} 上报了该 {{fields.issuetype.name}} "
+  {% if {{fields.assignee.displayName}} %}
+  - tag: text
+    text: "并分配给了 "
+  - tag: at
+    user_id: "@{{fields.assignee.name}}"
+  {% endif %}

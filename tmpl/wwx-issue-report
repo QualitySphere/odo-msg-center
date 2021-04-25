@@ -1,0 +1,8 @@
+#### {{report.title}} 缺陷状态追踪
+
+- 总数：{{report.total}}
+- 待修复：{{report.fixing}}
+- 已修复: {{report.fixed}}
+- 已验证: {{report.verified}}
+
+[点击查看仪表盘]({{report.url}})

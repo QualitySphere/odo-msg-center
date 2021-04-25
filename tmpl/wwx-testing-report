@@ -1,0 +1,8 @@
+#### {{report.title}} 执行状态
+
+- 总数: {{report.total}}
+- 未执行: {{report.notrun}}
+- 成功: {{report.pass}}
+- 失败: {{report.fail}}
+
+[点击查看测试报告]({{report.url}})

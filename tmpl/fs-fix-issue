@@ -4,4 +4,8 @@
     href: "http://0.0.0.0/browse/{{key}}"
 -
   - tag: text
-    text: "该 {{fields.issuetype.name}} 已被修复，请 @{{fields.reporter.displayName}} 尽快验证。"
+    text: "该 {{fields.issuetype.name}} 已被修复，请 "
+  - tag: at
+    user_id: "@{{fields.reporter.name}} "
+  - tag: text
+    text: "尽快验证。"

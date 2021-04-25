@@ -1,0 +1,19 @@
+-
+  - tag: text
+    text: "{{report.title}} 执行状态"
+-
+  - tag: text
+    text: "总数: {{report.total}}"
+-
+  - tag: text
+    text: "未执行: {{report.notrun}}"
+-
+  - tag: text
+    text: "成功: {{report.pass}}"
+-
+  - tag: text
+    text: "失败: {{report.fail}}"
+-
+  - tag: a
+    text: "点击查看测试报告"
+    href: "{{report.url}}"

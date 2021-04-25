@@ -1,15 +1,18 @@
 -
   - tag: text
-    text: "{{report.sprint}} 缺陷状态追踪 共 {{report.issue.total}} 个"
+    text: "{{report.title}} 缺陷状态追踪"
 -
   - tag: text
-    text: "待修复：{{report.issue.fixing}}"
+    text: "总数：{{report.total}}"
 -
   - tag: text
-    text: "已修复: {{report.issue.fixed}}"
+    text: "待修复：{{report.fixing}}"
 -
   - tag: text
-    text: "已验证: {{report.issue.verified}}"
+    text: "已修复: {{report.fixed}}"
+-
+  - tag: text
+    text: "已验证: {{report.verified}}"
 -
   - tag: a
     text: "点击查看报告详情"

@@ -4,4 +4,6 @@
     href: "http://0.0.0.0/browse/{{key}}"
 -
   - tag: text
-    text: "该 {{fields.issuetype.name}} 被分配给你 @{{fields.assignee.displayName}}"
+    text: "该 {{fields.issuetype.name}} 被分配给了 "
+  - tag: at
+    user_id: "@{{fields.assignee.name}}"

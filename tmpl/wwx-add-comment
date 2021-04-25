@@ -1,5 +1,5 @@
 {% set issue_key = comment.self.split('/')[-3] %}
 
-#### {{comment.updateAuthor.displayName}} 曰：
+#### {{comment.updateAuthor.displayName}} 添加了一条评论：
 
 [{{comment.body}}](http://0.0.0.0/issues/?jql=issuekey%3D{{issue_key}})

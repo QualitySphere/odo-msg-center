@@ -1,3 +1,7 @@
 #### [{{key}} {{fields.summary}}](http://0.0.0.0/browse/{{key}})
 
+{% if {{fields.assignee.displayName}} %}
+{{fields.creator.displayName}} 上报了该 {{fields.issuetype.name}} 并分配给了 {{fields.assignee.name}}
+{% else %}
 {{fields.creator.displayName}} 上报了该 {{fields.issuetype.name}}
+{% endif %}
