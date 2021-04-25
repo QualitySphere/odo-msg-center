@@ -51,15 +51,19 @@ def msg_content(tmpl, body):
     # 若能转换，则替换原 @用户 字符串，并记录下来
     _at_users = list()
     for _user in _body.get('users'):
-        logging.info('Found user %s in message' % _user)
         _im_user = get_im_user(_user)
+        logging.info('Found user %s[%s] in message' % (_user, _im_user))
         if _im_user:
+            # 企业微信消息中 @用户的格式为 <@userid>
+            # 钉钉消息中 @用户的格式为 @userid ， 但在请求体中需要额外 at，在 def dt() 中进行了处理
+            # 飞书消息中 @用户 比较特殊，是 user_id: 用户 的格式，但可以要求模板中使用 user_id: @用户 的格式
             if '@%s' % _user in _content_raw:
-                logging.info('User %s in IM is %s' % (_user, _im_user))
+                logging.info('Replace: %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
                 _at_users.append(_im_user)
+            # jira comment 中 at 用户的格式为 [~userid]
             if '[~%s]' % _user in _content_raw:
-                logging.info('User %s in IM is %s' % (_user, _im_user))
+                logging.info('Replace %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
                 _at_users.append(_im_user)
     # 结束
@@ -148,8 +152,6 @@ def fs(tmpl, body):
             }
         }
     }
-    # 开始 # 如果内容中包含用户，就检查是否需要 at，若需要就在请求体中加上 at 部分
-    # 似乎需要用有权限的 API 才能获取飞书用户的 userid，暂不处理该处逻辑
     # 结束
     logging.info('%s POST %s' % (_content['sender'], _url))
     logging.info(_body['content'])
