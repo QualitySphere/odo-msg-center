@@ -6,7 +6,9 @@ from flask_cors import CORS
 import connexion
 import logging
 
+
 logging.basicConfig(level=logging.INFO, format='[ %(asctime)s ] %(levelname)s %(message)s')
+
 
 if __name__ == '__main__':
     app = Flask(__name__)
@@ -20,4 +22,5 @@ if __name__ == '__main__':
         options=options
     )
     app.add_api("swagger.yaml")
+
     app.run(port=80, debug=True)

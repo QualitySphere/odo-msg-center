@@ -7,6 +7,20 @@ from app.services import svcRobot
 import logging
 
 
+def list_tmpl():
+    try:
+        return svcRobot.list_tmpl(), 200
+    except Exception as e:
+        raise Exception(e)
+
+
+def get_tmpl(tmpl):
+    try:
+        return svcRobot.get_tmpl(tmpl), 200
+    except Exception as e:
+        raise Exception(e)
+
+
 def wwx(tmpl, body):
     """
     POST /oapi/robot/wwx

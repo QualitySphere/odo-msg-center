@@ -5,7 +5,7 @@
 
 import requests
 # from urllib.parse import urlparse
-# import os
+import os
 import logging
 from time import time
 from hashlib import sha256
@@ -17,6 +17,24 @@ from app.services.svcParser import parse_webhook, get_env_config, get_im_user
 from jinja2 import Environment as jj2Environment
 from jinja2 import FileSystemLoader as jj2FileSystemLoader
 from jinja2.exceptions import TemplateNotFound, UndefinedError
+
+
+def list_tmpl():
+    _tmpls = os.listdir('template')
+    return _tmpls
+
+
+def get_tmpl(tmpl):
+    if tmpl:
+        _tmpl_file = os.path.join('template', tmpl)
+        try:
+            with open(_tmpl_file, 'r', encoding='utf-8') as f:
+                _tmpl_content = f.read()
+            return _tmpl_content
+        except Exception:
+            raise TemplateNotFound
+    else:
+        raise TemplateNotFound
 
 
 def msg_content(tmpl, body):
