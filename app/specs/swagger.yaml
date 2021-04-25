@@ -37,6 +37,17 @@ paths:
         204:
           description: Black Hole
 
+  /robot:
+    get:
+      summary: 支持的机器人列表
+      operationId: api.apiRobot.list_robot
+      tags:
+        - msg
+      responses:
+        200:
+          description: 成功获取机器人列表
+
+
   /robot/wwx:
     post:
       summary: 企业微信机器人 Work WeiXin Robot

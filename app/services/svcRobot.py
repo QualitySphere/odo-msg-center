@@ -19,6 +19,23 @@ from jinja2 import FileSystemLoader as jj2FileSystemLoader
 from jinja2.exceptions import TemplateNotFound, UndefinedError
 
 
+def list_robot():
+    return [
+        {
+            'robotName': u'企业微信 Work WeiXin 机器人',
+            'robotKey': 'wwx',
+        },
+        {
+            'robotName': u'钉钉 DingTalk 机器人',
+            'robotKey': 'dt',
+        },
+        {
+            'robotName': u'飞书 FeiShu 机器人',
+            'robotKey': 'fs',
+        },
+    ]
+
+
 def list_tmpl():
     _tmpls = os.listdir('template')
     return _tmpls

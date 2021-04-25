@@ -7,7 +7,22 @@ from app.services import svcRobot
 import logging
 
 
+def list_robot():
+    """
+    GET /oapi/robot
+    :return:
+    """
+    try:
+        return svcRobot.list_robot(), 200
+    except Exception as e:
+        raise Exception(e)
+
+
 def list_tmpl():
+    """
+    GET /oapi/robot/template
+    :return:
+    """
     try:
         return svcRobot.list_tmpl(), 200
     except Exception as e:
