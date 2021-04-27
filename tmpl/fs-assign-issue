@@ -6,4 +6,4 @@
   - tag: text
     text: "该 {{fields.issuetype.name}} 被分配给了 "
   - tag: at
-    user_id: "@{{fields.assignee.name}}"
+    user_id: "{{fields.assignee.name}}"

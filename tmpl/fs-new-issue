@@ -9,5 +9,5 @@
   - tag: text
     text: "并分配给了 "
   - tag: at
-    user_id: "@{{fields.assignee.name}}"
+    user_id: "{{fields.assignee.name}}"
   {% endif %}
