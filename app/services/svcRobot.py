@@ -91,7 +91,6 @@ def msg_content(tmpl, body):
         if _im_user:
             # 企业微信消息中 @用户的格式为 <@userid>
             # 钉钉消息中 @用户的格式为 @userid ， 但在请求体中需要额外 at，在 def dt() 中进行了处理
-            # 飞书消息中 @用户 比较特殊，是 user_id: 用户 的格式，但可以要求模板中使用 user_id: @用户 的格式
             if '@%s' % _user in _content_raw:
                 logging.info('Replace: %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
@@ -101,6 +100,13 @@ def msg_content(tmpl, body):
                 logging.info('Replace %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
                 _at_users.append(_im_user)
+            # 飞书消息中 @用户 比较特殊，是 user_id: 用户 的格式
+            if 'user_id: "%s"' % _user in _content_raw:
+                logging.info('Replace %s --> %s' % (_user, _im_user))
+                _content_raw = _content_raw.replace('user_id: "%s"' % _user, 'user_id: "%s"' % _im_user)
+            elif 'user_id: \'%s\'' % _user in _content_raw:
+                logging.info('Replace %s --> %s' % (_user, _im_user))
+                _content_raw = _content_raw.replace('user_id: \'%s\'' % _user, 'user_id: "%s"' % _im_user)
     # 结束
 
     # 开始 # 若有需要 @用户 就替换标题中的 @you
