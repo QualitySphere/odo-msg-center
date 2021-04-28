@@ -54,21 +54,15 @@ services:
     container_name: odo-msg
     image: bxwill/odo-msg
     restart: always
+    networks:
+      - odo
     ports:
       - 80:80
     volumes:
       - ./template:/workspace/template
       - ./config:/workspace/config
-    environment:
-      JIRA_URL: ''
-      JIRA_USER: ''
-      JIRA_PASS: ''
-      JENKINS_URL: ''
-      JENKINS_USER: ''
-      JENKINS_TOKEN: ''
-      WWX_ROBOT_KEY: ''
-      DT_TOKEN: ''
-      DT_SECRET: ''
-      FS_TOKEN: ''
-      FS_SECRET: ''
+
+networks:
+  odo:
+    driver: bridge
 ```
