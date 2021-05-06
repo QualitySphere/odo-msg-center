@@ -127,14 +127,14 @@ paths:
         200:
           description: 成功获取模板列表
 
-  /robot/template/{template_name}:
+  /robot/template/{tmpl}:
     get:
       summary: 机器人消息通知模板列表
       operationId: api.apiRobot.get_tmpl
       tags:
         - "msg"
       parameters:
-        - name: template_name
+        - name: tmpl
           description: 消息模板名称，模板都存放在 template 目录中
           in: path
           required: true
