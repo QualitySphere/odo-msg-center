@@ -1,0 +1,16 @@
+-
+  - tag: text
+    text: "{{user.name}} 在"
+  - tag: a
+    text: "{{project.name}}"
+    href: "{{project.web_url}}"
+  - tag: text
+    text: "请求代码合并"
+-
+  - tag: text
+    text: "请管理员前往"
+  - tag: a
+    text: "{{object_attributes.title}}"
+    href: "{{object_attributes.url}}"
+  - tag: text
+    text: "审核"
