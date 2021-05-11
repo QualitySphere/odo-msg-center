@@ -54,14 +54,15 @@ def get_tmpl(tmpl):
         raise TemplateNotFound
 
 
-def msg_content(tmpl, body):
+def msg_content(headers, tmpl, body):
     """
     解析处理 body 中的信息，渲染消息模板
+    :param headers:
     :param tmpl:
     :param body:
     :return:
     """
-    _body = parse_webhook(body)
+    _body = parse_webhook(headers, body)
     _sender = _body.get('sender')
     _event = _body.get('event')
     _title = _body.get('title')
@@ -133,9 +134,10 @@ def msg_content(tmpl, body):
     return _msg
 
 
-def wwx(tmpl, body):
+def wwx(headers, tmpl, body):
     """
     Work Weixin Robot
+    :param headers:
     :param tmpl:
     :param body:
     :return:
@@ -147,14 +149,15 @@ def wwx(tmpl, body):
         raise EnvironmentError
     # 结束
 
-    _content = msg_content(tmpl, body)
+    _content = msg_content(headers, tmpl, body)
     _wwx = WWXRobot(key=_wwx_key)
     return _wwx.send_markdown(content=_content.get('content'))
 
 
-def fs(tmpl, body):
+def fs(headers, tmpl, body):
     """
     FeiShu Robot
+    :param headers:
     :param tmpl:
     :param body:
     :return:
@@ -167,7 +170,7 @@ def fs(tmpl, body):
         raise EnvironmentError
     # 结束
 
-    _content = msg_content(tmpl, body)
+    _content = msg_content(headers, tmpl, body)
     _url = 'https://open.feishu.cn/open-apis/bot/v2/hook/%s' % _fs_token
     _headers = {
         'Accept': 'application/json',
@@ -202,9 +205,10 @@ def fs(tmpl, body):
     return _rsp.json()
 
 
-def dt(tmpl, body):
+def dt(headers, tmpl, body):
     """
     DingTalk Robot
+    :param headers:
     :param tmpl:
     :param body:
     :return:
@@ -217,7 +221,7 @@ def dt(tmpl, body):
         raise EnvironmentError
     # 结束
 
-    _content = msg_content(tmpl, body)
+    _content = msg_content(headers, tmpl, body)
     _url = 'https://oapi.dingtalk.com/robot/send'
     _headers = {
         'Accept': 'application/json',

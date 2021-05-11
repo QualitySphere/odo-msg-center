@@ -3,6 +3,7 @@
 # Author: v.stone@163.com
 
 
+from flask import request
 from app.services import svcRobot
 import logging
 
@@ -45,7 +46,7 @@ def wwx(tmpl, body):
     """
     logging.info(body)
     try:
-        svcRobot.wwx(tmpl, body)
+        svcRobot.wwx(request.headers, tmpl, body)
         return {
             'title': 'Succeed'
         }, 200
@@ -62,7 +63,7 @@ def fs(tmpl, body):
     """
     logging.info(body)
     try:
-        svcRobot.fs(tmpl, body)
+        svcRobot.fs(request.headers, tmpl, body)
         return {
             'title': 'Succeed'
         }, 200
@@ -79,7 +80,7 @@ def dt(tmpl, body):
     """
     logging.info(body)
     try:
-        svcRobot.dt(tmpl, body)
+        svcRobot.dt(request.headers, tmpl, body)
         return {
             'title': 'Succeed'
         }, 200

@@ -3,6 +3,7 @@
 # Author: v.stone@163.com
 
 
+from flask import request
 from app.services import svcJira
 # import logging
 

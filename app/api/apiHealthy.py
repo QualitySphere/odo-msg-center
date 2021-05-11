@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
+from flask import request
 from app.services import svcHealthy
 
 
@@ -32,7 +33,7 @@ def black_hole(body):
     :return:
     """
     try:
-        svcHealthy.black_hole(body)
+        svcHealthy.black_hole(request.headers, body)
         return {}, 204
     except Exception as e:
         raise Exception(e)

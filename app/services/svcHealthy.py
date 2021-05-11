@@ -6,12 +6,14 @@
 import logging
 
 
-def black_hole(body):
+def black_hole(headers, body):
     """
-    Print webhook body
+    Print webhook request
+    :param headers:
     :param body:
     :return:
     """
+    logging.warning(headers)
     logging.warning(body)
     return True
 

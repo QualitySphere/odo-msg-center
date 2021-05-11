@@ -13,7 +13,8 @@ CONFIG_USERS_FILE = os.path.join('config', 'users.yaml')
 
 
 class OdoParse(object):
-    def __init__(self, webhook_body):
+    def __init__(self, webhook_headers, webhook_body):
+        self.webhook_headers = webhook_headers
         self.webhook_body = webhook_body
         self.webhook_sender = str()
         self.webhook_users = list()
@@ -22,24 +23,20 @@ class OdoParse(object):
         self.webhook_content = dict()
 
     def parse_sender(self):
-        if 'self' in self.webhook_body.keys() and \
-                'id' in self.webhook_body.keys() and \
-                'key' in self.webhook_body.keys() and \
-                'fields' in self.webhook_body.keys():
-            self.webhook_sender = 'a4j'
-            logging.info('Sender is Automation for Jira')
+        if self.webhook_headers.get('X-Gitlab-Event'):
+            self.webhook_sender = 'gitlab'
+            logging.info('Sender is GitLab')
             return True
-        if 'timestamp' in self.webhook_body.keys() and \
-                'webhookEvent' in self.webhook_body.keys():
-            self.webhook_sender = 'jira'
-            logging.info('Sender is Jira Webhook')
-            return True
-        if 'type' in self.webhook_body.keys() and \
-                'occur_at' in self.webhook_body.keys() and \
-                'operator' in self.webhook_body.keys() and \
-                'event_data' in self.webhook_body.keys():
-            self.webhook_sender = 'harbor'
-            logging.info('Sender is Harbor')
+        if self.webhook_headers.get('User-Agent'):
+            if 'Automation for Jira' in self.webhook_headers['User-Agent']:
+                self.webhook_sender = 'a4j'
+                logging.info('Sender is Automation for Jira')
+            elif 'Atlassian HttpClient' in self.webhook_headers['User-Agent']:
+                self.webhook_sender = 'jira'
+                logging.info('Sender is Jira Webhook')
+            elif 'Go-http-client' in self.webhook_headers['User-Agent']:
+                self.webhook_sender = 'harbor'
+                logging.info('Sender is Harbor')
             return True
 
     def parse_user(self, key_smart_path: str):
@@ -124,8 +121,8 @@ class OdoParse(object):
         }
 
 
-def parse_webhook(webhook_body):
-    odo_parse = OdoParse(webhook_body)
+def parse_webhook(webhook_headers, webhook_body):
+    odo_parse = OdoParse(webhook_headers, webhook_body)
     odo_parse.parse_sender()
     return odo_parse.parse_webhook()
 
