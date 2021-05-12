@@ -10,8 +10,19 @@ import logging
 
 
 def __assert_body_filter(body: dict, body_filter):
+    """
+    Check body_filter and return True or False
+    :param body:
+    :param body_filter:
+    :return:
+    """
     if body_filter:
-        _fk, _fv = unquote(body_filter).split('=')
+        logging.info(u'发现请求包含过滤条件 %s' % body_filter)
+        try:
+            _fk, _fv = unquote(body_filter).split('=')
+        except ValueError:
+            logging.error(u'过滤条件异常，解析时出错，过滤视为无效')
+            return True
         _v = body.copy()
         try:
             for _k in _fk.split('.'):
@@ -21,10 +32,12 @@ def __assert_body_filter(body: dict, body_filter):
                 else:
                     _v = _v[_k]
         except KeyError or TypeError:
-            logging.warning(u'过滤条件异常，查找 %s 时出错' % _fk)
-            return False
+            logging.error(u'过滤条件异常，查找 %s 时出错，过滤视为无效' % _fk)
+            return True
         if _fv not in _v:
+            logging.warning(u'忽略该 webhook 因为不符合过滤条件')
             return False
+        logging.info(u'符合过滤条件 %s' % body_filter)
     return True
 
 
@@ -69,11 +82,9 @@ def wwx(tmpl, body, body_filter=None):
     try:
         if __assert_body_filter(body, body_filter):
             svcRobot.wwx(request.headers, tmpl, body)
-        else:
-            logging.info('Ignore this webhook because of filter %s' % body_filter)
         return {
-                   'title': 'Succeed'
-               }, 200
+            'title': 'Succeed'
+        }, 200
     except Exception as e:
         raise Exception(e)
 
@@ -90,11 +101,9 @@ def fs(tmpl, body, body_filter=None):
     try:
         if __assert_body_filter(body, body_filter):
             svcRobot.fs(request.headers, tmpl, body)
-        else:
-            logging.info('Ignore this webhook because of %s' % body_filter)
         return {
-                   'title': 'Succeed'
-               }, 200
+            'title': 'Succeed'
+        }, 200
     except Exception as e:
         raise Exception(e)
 
@@ -111,11 +120,9 @@ def dt(tmpl, body, body_filter=None):
     try:
         if __assert_body_filter(body, body_filter):
             svcRobot.dt(request.headers, tmpl, body)
-        else:
-            logging.info('Ignore this webhook because of %s' % body_filter)
         return {
-                   'title': 'Succeed'
-               }, 200
+            'title': 'Succeed'
+        }, 200
     except Exception as e:
         raise Exception(e)
 
