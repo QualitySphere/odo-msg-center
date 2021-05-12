@@ -5,7 +5,27 @@
 
 from flask import request
 from app.services import svcRobot
+from urllib.parse import unquote
 import logging
+
+
+def __assert_body_filter(body: dict, body_filter):
+    if body_filter:
+        _fk, _fv = unquote(body_filter).split('=')
+        _v = body.copy()
+        try:
+            for _k in _fk.split('.'):
+                # logging.warning(_v)
+                if type(_v) is list:
+                    _v = _v[int(_k)]
+                else:
+                    _v = _v[_k]
+        except KeyError or TypeError:
+            logging.warning(u'过滤条件异常，查找 %s 时出错' % _fk)
+            return False
+        if _fv not in _v:
+            return False
+    return True
 
 
 def list_robot():
@@ -37,53 +57,65 @@ def get_tmpl(tmpl):
         raise Exception(e)
 
 
-def wwx(tmpl, body):
+def wwx(tmpl, body, body_filter=None):
     """
     POST /oapi/robot/wwx
     :param tmpl:
     :param body:
+    :param body_filter:
     :return:
     """
     logging.info(body)
     try:
-        svcRobot.wwx(request.headers, tmpl, body)
+        if __assert_body_filter(body, body_filter):
+            svcRobot.wwx(request.headers, tmpl, body)
+        else:
+            logging.info('Ignore this webhook because of filter %s' % body_filter)
         return {
-            'title': 'Succeed'
-        }, 200
+                   'title': 'Succeed'
+               }, 200
     except Exception as e:
         raise Exception(e)
 
 
-def fs(tmpl, body):
+def fs(tmpl, body, body_filter=None):
     """
     POST /oapi/robot/fs
     :param tmpl:
     :param body:
+    :param body_filter:
     :return:
     """
     logging.info(body)
     try:
-        svcRobot.fs(request.headers, tmpl, body)
+        if __assert_body_filter(body, body_filter):
+            svcRobot.fs(request.headers, tmpl, body)
+        else:
+            logging.info('Ignore this webhook because of %s' % body_filter)
         return {
-            'title': 'Succeed'
-        }, 200
+                   'title': 'Succeed'
+               }, 200
     except Exception as e:
         raise Exception(e)
 
 
-def dt(tmpl, body):
+def dt(tmpl, body, body_filter=None):
     """
     POST /oapi/robot/dt
     :param tmpl:
     :param body:
+    :param body_filter:
     :return:
     """
     logging.info(body)
     try:
-        svcRobot.dt(request.headers, tmpl, body)
+        if __assert_body_filter(body, body_filter):
+            svcRobot.dt(request.headers, tmpl, body)
+        else:
+            logging.info('Ignore this webhook because of %s' % body_filter)
         return {
-            'title': 'Succeed'
-        }, 200
+                   'title': 'Succeed'
+               }, 200
     except Exception as e:
         raise Exception(e)
 

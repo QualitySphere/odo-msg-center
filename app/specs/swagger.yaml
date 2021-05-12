@@ -62,6 +62,13 @@ paths:
           schema:
             type: string
             example: wwx-new-issue
+        - name: body_filter
+          description: 过滤请求体中 key-value
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tag=master
       requestBody:
         content:
           application/json:
@@ -85,6 +92,13 @@ paths:
           schema:
             type: string
             example: fs-new-issue
+        - name: body_filter
+          description: 过滤请求体中 key-value
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tag=master
       requestBody:
         content:
           application/json:
@@ -108,6 +122,13 @@ paths:
           schema:
             type: string
             example: dt-new-issue
+        - name: body_filter
+          description: 过滤请求体中 key-value
+          in: query
+          required: false
+          schema:
+            type: string
+            example: tag=master
       requestBody:
         content:
           application/json:

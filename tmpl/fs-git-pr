@@ -1,16 +1,19 @@
 -
   - tag: text
-    text: "{{user.name}} 在"
+    text: "{{user.name}} {{state}} 一个代码合并请求 "
   - tag: a
-    text: "{{project.name}}"
-    href: "{{project.web_url}}"
+    text: "{{project.name}}/{{object_attributes.source_branch}}"
+    href: "{{project.web_url}}/tree/{{object_attributes.source_branch}}"
   - tag: text
-    text: "请求代码合并"
+    text: " 到 "
+  - tag: a
+    text: "{{project.name}}/{{object_attributes.target_branch}}"
+    href: "{{project.web_url}}/tree/{{object_attributes.target_branch}}"
 -
   - tag: text
-    text: "请管理员前往"
+    text: "可点击 "
   - tag: a
     text: "{{object_attributes.title}}"
     href: "{{object_attributes.url}}"
   - tag: text
-    text: "审核"
+    text: " 前往查看"
