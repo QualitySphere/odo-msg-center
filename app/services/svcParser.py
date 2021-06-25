@@ -57,7 +57,7 @@ class OdoParse(object):
 
     def parse_jira_webhook(self):
         self.webhook_event = self.webhook_body['webhookEvent'].replace('jira:', '').replace('_', '').capitalize()
-        self.webhook_title = 'Attention! Jira @you'
+        self.webhook_title = 'Jira @you'
         self.webhook_content = self.webhook_body
         self.parse_user('comment.author.name')
         self.parse_user('comment.updateAuthor.name')
@@ -75,7 +75,7 @@ class OdoParse(object):
             self.webhook_event = 'Create'
         else:
             self.webhook_event = 'Update'
-        self.webhook_title = 'Attention! Jira @you'
+        self.webhook_title = 'Jira @you'
         self.webhook_content = self.webhook_body
         self.parse_user('fields.creator.name')
         self.parse_user('fields.reporter.name')
@@ -83,12 +83,13 @@ class OdoParse(object):
         return True
 
     def parse_gitlab_webhook(self):
+        self.webhook_title = 'GitLab @you'
         self.webhook_content = self.webhook_body
         return True
 
     def parse_harbor_webhook(self):
         self.webhook_event = self.webhook_body['type'].replace('_', ' ').capitalize()
-        self.webhook_title = 'GREAT! Harbor @you'
+        self.webhook_title = 'Harbor @you'
         self.webhook_content = self.webhook_body
         return True
 

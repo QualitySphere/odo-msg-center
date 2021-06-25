@@ -64,6 +64,7 @@ def msg_content(headers, tmpl, body):
     """
     _body = parse_webhook(headers, body)
     _sender = _body.get('sender')
+    _users = _body.get('users')
     _event = _body.get('event')
     _title = _body.get('title')
     _data = _body.get('content')
@@ -82,7 +83,7 @@ def msg_content(headers, tmpl, body):
         raise KeyError(e.message)
     # 结束
 
-    # 开始 # 检查内容中是否包含 @用户 信息: 格式有可能为 @user 或者 [~user]
+    # 开始 # 进一步检查消息内容中是否包含 @用户 信息: 格式有可能为 @user 或者 [~user]
     # 若包含，则检查是否能转换为自定义(如企业微信、飞书、钉钉使用)的 ID
     # 若能转换，则替换原 @用户 字符串，并记录下来
     _at_users = list()
@@ -95,19 +96,21 @@ def msg_content(headers, tmpl, body):
             if '@%s' % _user in _content_raw:
                 logging.info('Replace: %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('@%s' % _user, '@%s' % _im_user)
-                _at_users.append(_im_user)
+                _at_users.append(_user)
             # jira comment 中 at 用户的格式为 [~userid]
             if '[~%s]' % _user in _content_raw:
                 logging.info('Replace %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('[~%s]' % _user, '@%s' % _im_user)
-                _at_users.append(_im_user)
+                _at_users.append(_user)
             # 飞书消息中 @用户 比较特殊，是 user_id: 用户 的格式
             if 'user_id: "%s"' % _user in _content_raw:
                 logging.info('Replace %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('user_id: "%s"' % _user, 'user_id: "%s"' % _im_user)
+                _at_users.append(_user)
             elif 'user_id: \'%s\'' % _user in _content_raw:
                 logging.info('Replace %s --> %s' % (_user, _im_user))
                 _content_raw = _content_raw.replace('user_id: \'%s\'' % _user, 'user_id: "%s"' % _im_user)
+                _at_users.append(_user)
     # 结束
 
     # 开始 # 若有需要 @用户 就替换标题中的 @you
